@@ -120,7 +120,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
             Log.d(tesID," available");
         }
         else {
-            Log.e(tesID,"ora ono jee");
+            Log.e(tesID,"ga ada cuii");
         }
     }
 
