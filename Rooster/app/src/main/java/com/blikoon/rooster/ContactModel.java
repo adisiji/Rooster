@@ -2,6 +2,8 @@ package com.blikoon.rooster;
 
 import android.content.Context;
 
+import com.blikoon.rooster.utils.prefUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
 public class ContactModel {
 
     private static ContactModel sContactModel;
-    private List<Contact> mContacts;
+    public static List<Contact> mContacts;
 
     public static ContactModel get(Context context)
     {
@@ -31,21 +33,12 @@ public class ContactModel {
 
     private void populateWithInitialContacts(Context context)
     {
-        //Create the Foods and add them to the list;
-        Contact contact1 = new Contact("zoza@izuba.tech");
-        mContacts.add(contact1);
-        Contact contact2 = new Contact("asneiya31@xmpp.jp");
-        mContacts.add(contact2);
-        Contact contact3 = new Contact("User3@server.com");
-        mContacts.add(contact3);
-        Contact contact4 = new Contact("User4@server.com");
-        mContacts.add(contact4);
-        Contact contact5 = new Contact("User5@server.com");
-        mContacts.add(contact5);
-        Contact contact6 = new Contact("User6@server.com");
-        mContacts.add(contact6);
-        Contact contact7 = new Contact("User7@server.com");
-        mContacts.add(contact7);
+        //Create the Contacts and add them to the list;
+        String server = prefUtil.getInstance().getString("server_name",null);
+        if(server!=null){
+            Contact contact = new Contact(server);
+            mContacts.add(contact);
+        }
     }
 
     public List<Contact> getContacts()

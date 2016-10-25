@@ -14,16 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.blikoon.rooster.utils.prefUtil;
+
 /**
  * Created by neobyte on 10/15/2016.
  */
 
 public class AddReceiverDialog_Fragment extends DialogFragment implements TextView.OnEditorActionListener{
 
+    private UserNameListener listener;
     private EditText mEditText;
 
     public interface UserNameListener {
-        void onFinishUserDialog(String user);
+        void onFinishUserDialog(String content, int sikon);
     }
 
     public AddReceiverDialog_Fragment() {
@@ -32,13 +35,25 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         // Use `newInstance` instead as shown below
     }
 
-    public static AddReceiverDialog_Fragment newInstance(String title) {
-        AddReceiverDialog_Fragment frag = new AddReceiverDialog_Fragment();
+    public static AddReceiverDialog_Fragment newInstance(String title, int which){
+        AddReceiverDialog_Fragment dialog_fragment = new AddReceiverDialog_Fragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
-        frag.setArguments(args);
-        return frag;
+        args.putString("title",title);
+        args.putInt("sikon",which);
+        dialog_fragment.setArguments(args);
+        return dialog_fragment;
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            listener = (UserNameListener) getTargetFragment();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Calling Fragment must implement OnAddFriendListener");
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,13 +68,11 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         mEditText = (EditText) view.findViewById(R.id.txt_your_name);
         Button btnOk = (Button)view.findViewById(R.id.button) ;
         Button btnCancel = (Button)view.findViewById(R.id.button2);
-
+        final int sikon = getArguments().getInt("sikon",0);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserNameListener listener = (UserNameListener) getActivity();
-                listener.onFinishUserDialog(mEditText.getText().toString());
-                Log.d("klik",mEditText.getText().toString());
+                listener.onFinishUserDialog(mEditText.getText().toString(),sikon);
                 dismiss();
             }
         });
@@ -86,12 +99,13 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (EditorInfo.IME_ACTION_DONE == actionId) {
             // Return input text back to activity through the implemented listener
-            UserNameListener listener = (UserNameListener) getActivity();
-            listener.onFinishUserDialog(mEditText.getText().toString());
+            final int sikon = getArguments().getInt("sikon",0);
+            listener.onFinishUserDialog(mEditText.getText().toString(), sikon);
             // Close the dialog and return back to the parent activity
             dismiss();
             return true;
         }
         return false;
     }
+
 }

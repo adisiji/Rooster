@@ -13,6 +13,8 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.blikoon.rooster.utils.prefUtil;
+
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
@@ -63,13 +65,13 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
     }
 
 
-    public RoosterConnection( Context context)
+    public RoosterConnection(Context context)
     {
         Log.d(TAG,"RoosterConnection Constructor called.");
         mApplicationContext = context.getApplicationContext();
         mNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotifyBuilder =  new NotificationCompat.Builder(context)
-                        .setContentTitle("SMS Pulsa")
+                        .setContentTitle("SMS XMPP")
                         .setContentText("You've received new messages.")
                         .setSmallIcon(R.mipmap.ic_launcher);
 
@@ -138,6 +140,8 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                         }
                     }
                     else if(action.equals("android.provider.Telephony.SMS_RECEIVED")){
+                        final String filter_sms = prefUtil.getInstance().getString("filter_text",null);
+                        final String server = prefUtil.getInstance().getString("server_name",null);
                         Bundle myBundle = intent.getExtras();
                         SmsMessage [] messages = null;
                         String strMessage = "";
@@ -159,17 +163,20 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                 }
                                 strMessage += "SMS From: " + messages[i].getOriginatingAddress();
                                 strMessage += " : ";
+                                String isiSMS =  messages[i].getMessageBody();
                                 strMessage += messages[i].getMessageBody();
-                                //show notification
-                                mNotifyBuilder.setContentText(messages[i].getMessageBody())
-                                        .setNumber(numMsg++);
-                                mNotification.notify(notifyID,mNotifyBuilder.build());
-                                strMessage += "\n";
+                                Log.e("isi filter",filter_sms);
+                                if(isiSMS.indexOf(filter_sms)==0){
+                                    //show notification
+                                    mNotifyBuilder.setContentText(messages[i].getMessageBody())
+                                            .setNumber(numMsg++);
+                                    mNotification.notify(notifyID,mNotifyBuilder.build());
+                                    sendMessage(strMessage,server);
+                                }
                             }
 
                             Log.e(" SMS >>", strMessage);
                             Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
-                            sendMessage(strMessage,tesID);
                         }
                     }
             }

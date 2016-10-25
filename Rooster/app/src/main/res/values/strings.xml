@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rooster</string>
+    <string name="app_name">SMS2XMPP</string>
 
     <!-- Strings related to login -->
     <string name="prompt_jid">Jabber Id</string>
@@ -14,4 +14,24 @@
         completions."
     </string>
     <string name="ticker_text">Notif Xmpp Lho</string>
-</resources>
+    <string name="re_tap_text">Press Back Again to Exit</string>
+
+    <!--header menu-->
+    <string name="dev_mail">madidarma1@gmail.com</string>
+    <string name="dev_web_page">www.facebook.com/neobyte21</string>
+    <string name="dev_phone">+6289601673292</string>
+
+    <!--menu strings-->
+    <string name="nav_edit_server">Edit Server</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_edit_text">Edit Text Filter</string>
+    <string name="nav_logout">Log Out</string>
+
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+
+    <string name="default_filter">tes1.5</string>
+    <string name="default_server">asneiya31@xmpp.jp</string>
+
+    <string name="add_server">Server Name</string>
+    </resources>
