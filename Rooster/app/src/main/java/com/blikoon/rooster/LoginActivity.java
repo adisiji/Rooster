@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity
 
     // UI references.
     private AutoCompleteTextView mJidView;
-    private EditText mPasswordView;
+    private EditText mPasswordView, mServerHost;
     private View mProgressView;
     private View mLoginFormView;
     private BroadcastReceiver mBroadcastReceiver;
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity
         mJidView = (AutoCompleteTextView) findViewById(R.id.email);
         mJidView.setText("neobyte@xmpp.jp");
         populateAutoComplete();
-
+        mServerHost = (EditText)findViewById(R.id.serverLogin);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -194,6 +194,7 @@ public class LoginActivity extends AppCompatActivity
         // Reset errors.
         mJidView.setError(null);
         mPasswordView.setError(null);
+        mServerHost.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mJidView.getText().toString();
@@ -202,23 +203,32 @@ public class LoginActivity extends AppCompatActivity
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mJidView.setError(getString(R.string.error_field_required));
             focusView = mJidView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        }
+        //check empty password
+        else if(TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // Check for a valid password, if the user entered one.
+        else if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+        // Check for a valid email address.
+         else if (!isEmailValid(email)) {
             mJidView.setError(getString(R.string.error_invalid_jid));
             focusView = mJidView;
             cancel = true;
         }
+
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -242,9 +252,11 @@ public class LoginActivity extends AppCompatActivity
     {
         Log.d(TAG,"saveCredentialsAndLogin() called.");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //String
         prefs.edit()
                 .putString("xmpp_jid", mJidView.getText().toString())
                 .putString("xmpp_password", mPasswordView.getText().toString())
+                .putString("xmpp_server", mServerHost.getText().toString())
                 .putBoolean("xmpp_logged_in",true)
                 .apply();
 

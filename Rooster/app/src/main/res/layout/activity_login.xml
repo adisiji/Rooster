@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/server"
+                    android:id="@+id/serverLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_server"

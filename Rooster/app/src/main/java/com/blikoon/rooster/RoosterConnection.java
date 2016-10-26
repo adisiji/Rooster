@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.blikoon.rooster.utils.prefUtil;
 
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
@@ -25,7 +27,6 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.StreamOpen;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -43,7 +44,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
     private static final String TAG = "RoosterConnection";
     private static final String tesID = "asneiya31@xmpp.jp";
     private  final Context mApplicationContext;
-    private  final String mUsername;
+    private  final String mUsername, mServerHost;
     private  final String mPassword;
     private  final String mServiceName;
     private  final String jid;
@@ -76,6 +77,8 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                         .setContentText("You've received new messages.")
                         .setSmallIcon(R.mipmap.ic_launcher);
 
+        mServerHost = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                .getString("xmpp_server",null);
         jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_jid",null);
         mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
@@ -92,22 +95,43 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         }
     }
 
+    private XMPPTCPConnectionConfiguration.Builder builder(int port, String domain, String server){
+        XMPPTCPConnectionConfiguration.Builder buildoz =
+                XMPPTCPConnectionConfiguration.builder();
+        buildoz.setHost(server)
+                .setPort(port)
+                .setServiceName(domain);
+        return buildoz;
+    }
+
+    private XMPPTCPConnectionConfiguration.Builder builder(int port, String domain){
+        XMPPTCPConnectionConfiguration.Builder buildoz =
+                XMPPTCPConnectionConfiguration.builder();
+        buildoz .setPort(port)
+                .setServiceName(domain);
+        return buildoz;
+    }
+
 
     public void connect() throws IOException, XMPPException,SmackException
     {
         Log.d(TAG, "Connecting to server " + mServiceName);
-        XMPPTCPConnectionConfiguration.Builder builder=
-                XMPPTCPConnectionConfiguration.builder();
-        builder.setServiceName(mServiceName);
-        builder.setUsernameAndPassword(mUsername, mPassword);
-        builder.setPort(5222);
+        XMPPTCPConnectionConfiguration.Builder builderx;
+        if(!TextUtils.isEmpty(mServerHost)){ //servernya di custom
+            builderx = builder(522,mServiceName,mServerHost);
+        }
+        else {
+            builderx = builder(522,mServiceName);
+        }
+        builderx.setUsernameAndPassword(mUsername, mPassword);
+        //builderx.setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
         //builder.setRosterLoadedAtLogin(true);
-        builder.setResource("Rooster");
+        builderx.setResource("Rooster");
 
         //Set up the ui thread broadcast message receiver.
         setupUiThreadBroadCastMessageReceiver();
 
-        mConnection = new XMPPTCPConnection(builder.build());
+        mConnection = new XMPPTCPConnection(builderx.build());
         mConnection.addConnectionListener(this);
         mConnection.connect();
         mConnection.login();
