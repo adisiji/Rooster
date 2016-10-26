@@ -65,10 +65,13 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
+        final int sikon = getArguments().getInt("sikon",0);
         mEditText = (EditText) view.findViewById(R.id.txt_your_name);
         Button btnOk = (Button)view.findViewById(R.id.button) ;
         Button btnCancel = (Button)view.findViewById(R.id.button2);
-        final int sikon = getArguments().getInt("sikon",0);
+        if(sikon==3||sikon==4){
+            mEditText.setHint("Kode");
+        }
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

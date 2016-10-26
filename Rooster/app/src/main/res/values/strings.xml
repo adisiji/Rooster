@@ -24,13 +24,14 @@
     <!--menu strings-->
     <string name="nav_edit_server">Edit Server</string>
     <string name="nav_home">Home</string>
-    <string name="nav_edit_text">Edit Text Filter</string>
+    <string name="nav_edit_text">Edit Code</string>
     <string name="nav_logout">Log Out</string>
 
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 
-    <string name="default_filter">tes1.5</string>
+    <string name="default_filter">입금</string>
+    <string name="default_filter2">원</string>
     <string name="default_server">asneiya31@xmpp.jp</string>
 
     <string name="add_server">Server Name</string>

@@ -71,6 +71,7 @@ public class RoosterConnectionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
         if(prefUtil.getInstance(this).getString("server_name")==null){
             Log.e("server_name" , "belum ADA");
             prefUtil.getInstance(this).set("server_name",getString(R.string.default_server));
@@ -79,10 +80,15 @@ public class RoosterConnectionService extends Service {
             Log.e("filter_text" , "belum ADA");
             prefUtil.getInstance(this).set("filter_text",getString(R.string.default_filter));
         }
+        if(prefUtil.getInstance(this).getString("filter_text2")==null){
+            Log.e("filter_text2" , "belum ADA");
+            prefUtil.getInstance(this).set("filter_text2",getString(R.string.default_filter2));
+        }
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext());
         Intent notificationIntent = new Intent(this, HomeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+        notification.setPriority(888);
         notification.setTicker(getString(R.string.ticker_text));
         notification.setContentTitle("XMPP-SMS Service");
         notification.setContentText("Don't kill me");

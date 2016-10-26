@@ -107,14 +107,14 @@ public class TextFilterFragment extends Fragment implements AddReceiverDialog_Fr
 
     private void showEditDialog(){
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Filter",2);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Code",4);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_edit_filter");
     }
 
     private void showAddDialog() {
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Filter",1);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Code",3);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_add_filter");
     }

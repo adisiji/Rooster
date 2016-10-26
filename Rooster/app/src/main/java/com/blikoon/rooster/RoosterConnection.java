@@ -25,6 +25,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.StreamOpen;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -128,7 +129,6 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         uiThreadMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                     //Check if the Intents purpose is to send the message.
                     String action = intent.getAction();
                     if (action.equals(RoosterConnectionService.SEND_MESSAGE)) {
@@ -141,6 +141,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                     }
                     else if(action.equals("android.provider.Telephony.SMS_RECEIVED")){
                         final String filter_sms = prefUtil.getInstance().getString("filter_text",null);
+                        final String batas = prefUtil.getInstance().getString("filter_text2",null);
                         final String server = prefUtil.getInstance().getString("server_name",null);
                         Bundle myBundle = intent.getExtras();
                         SmsMessage [] messages = null;
@@ -166,12 +167,18 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                 String isiSMS =  messages[i].getMessageBody();
                                 strMessage += messages[i].getMessageBody();
                                 Log.e("isi filter",filter_sms);
-                                if(isiSMS.indexOf(filter_sms)==0){
+                                int ind = isiSMS.indexOf(filter_sms);
+                                int bts = isiSMS.indexOf(batas);
+                                if(ind>-1 && bts >-1){
+                                    String deposit = isiSMS.substring(ind+3,bts);
+                                    deposit = deposit.replaceAll("[^\\d]", "");
+                                    deposit += ".KR";
+                                    deposit += isiSMS.substring(bts-3,bts);
                                     //show notification
                                     mNotifyBuilder.setContentText(messages[i].getMessageBody())
                                             .setNumber(numMsg++);
                                     mNotification.notify(notifyID,mNotifyBuilder.build());
-                                    sendMessage(strMessage,server);
+                                    sendMessage("Forward Ouput : "+deposit,server);
                                 }
                             }
 
