@@ -52,7 +52,7 @@ public class TextFilterFragment extends Fragment implements AddReceiverDialog_Fr
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_filter, container, false);
         filter_text = (TextView)view.findViewById(R.id.edit_server_txt);
-        String gg = prefUtil.getInstance(getActivity().getApplicationContext()).getString("filter_text");
+        String gg = prefUtil.getInstance(getActivity().getApplicationContext()).getString("filter_code");
         filter_text.setText(gg);
         ImageView btnDel = (ImageView)view.findViewById(R.id.btn_del_server) ;
         ImageView btnEdit = (ImageView)view.findViewById(R.id.btn_edit_server);
@@ -93,11 +93,11 @@ public class TextFilterFragment extends Fragment implements AddReceiverDialog_Fr
     @Override
     public void onFinishUserDialog(String filter, int which) {
             switch (which) {
-                case 1:
-                    //when add server
+                case 3: //when add code
+
                     break;
-                case 2:
-                    prefUtil.getInstance().set("filter_text",filter);
+                case 4: //edit code
+                    prefUtil.getInstance().set("filter_code",filter);
                     filter_text.setText(filter);
                     break;
                 default:
@@ -105,18 +105,18 @@ public class TextFilterFragment extends Fragment implements AddReceiverDialog_Fr
             }
     }
 
-    private void showEditDialog(){
-        FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Code",4);
-        dialog_fragment.setTargetFragment(this,1);
-        dialog_fragment.show(fm, "fragment_edit_filter");
-    }
-
     private void showAddDialog() {
         FragmentManager fm = getFragmentManager();
         AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Code",3);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_add_filter");
+    }
+
+    private void showEditDialog(){
+        FragmentManager fm = getFragmentManager();
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Code",4);
+        dialog_fragment.setTargetFragment(this,1);
+        dialog_fragment.show(fm, "fragment_edit_filter");
     }
 
 }

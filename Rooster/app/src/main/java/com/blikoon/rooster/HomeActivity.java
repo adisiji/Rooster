@@ -39,6 +39,7 @@ import static com.blikoon.rooster.utils.ColorUtil.getNavTextColorState;
 
 public class HomeActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
+
     private SharedPreferences prefs ;
     private NavigationView navigationView = null;
     private NavigationMenuView navigationMenuView = null;
@@ -51,13 +52,19 @@ public class HomeActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!prefs.getBoolean("xmpp_logged_in",true)){
+            Intent i = new Intent(this,LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            finish();
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);

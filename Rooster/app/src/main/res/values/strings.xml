@@ -4,6 +4,7 @@
     <!-- Strings related to login -->
     <string name="prompt_jid">Jabber Id</string>
     <string name="prompt_password">Password </string>
+    <string name="prompt_server">Server</string>
     <string name="action_sign_in">Sign in </string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_jid">This Jid  is invalid</string>
@@ -32,6 +33,7 @@
 
     <string name="default_filter">입금</string>
     <string name="default_filter2">원</string>
+    <string name="default_code">KR</string>
     <string name="default_server">asneiya31@xmpp.jp</string>
 
     <string name="add_server">Server Name</string>

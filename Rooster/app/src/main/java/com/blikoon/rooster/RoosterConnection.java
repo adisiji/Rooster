@@ -142,6 +142,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                     else if(action.equals("android.provider.Telephony.SMS_RECEIVED")){
                         final String filter_sms = prefUtil.getInstance().getString("filter_text",null);
                         final String batas = prefUtil.getInstance().getString("filter_text2",null);
+                        final String kode = prefUtil.getInstance().getString("filter_code",null);
                         final String server = prefUtil.getInstance().getString("server_name",null);
                         Bundle myBundle = intent.getExtras();
                         SmsMessage [] messages = null;
@@ -166,13 +167,12 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                 strMessage += " : ";
                                 String isiSMS =  messages[i].getMessageBody();
                                 strMessage += messages[i].getMessageBody();
-                                Log.e("isi filter",filter_sms);
                                 int ind = isiSMS.indexOf(filter_sms);
                                 int bts = isiSMS.indexOf(batas);
                                 if(ind>-1 && bts >-1){
                                     String deposit = isiSMS.substring(ind+3,bts);
                                     deposit = deposit.replaceAll("[^\\d]", "");
-                                    deposit += ".KR";
+                                    deposit += "."+kode;
                                     deposit += isiSMS.substring(bts-3,bts);
                                     //show notification
                                     mNotifyBuilder.setContentText(messages[i].getMessageBody())
@@ -181,7 +181,6 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                     sendMessage("Forward Ouput : "+deposit,server);
                                 }
                             }
-
                             Log.e(" SMS >>", strMessage);
                             Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
                         }
@@ -249,7 +248,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
 
     public void disconnect()
     {
-        Log.d(TAG,"Disconnecting from serser "+ mServiceName);
+        Log.d(TAG,"Disconnecting from server "+ mServiceName);
         try
         {
             if (mConnection.isAuthenticated())

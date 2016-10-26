@@ -40,6 +40,7 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         Bundle args = new Bundle();
         args.putString("title",title);
         args.putInt("sikon",which);
+        dialog_fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
         dialog_fragment.setArguments(args);
         return dialog_fragment;
     }
@@ -87,6 +88,7 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
                 dismiss();
             }
         });
+
         // Fetch arguments from bundle and set title
         String title = getArguments().getString("title", "Enter Name");
         getDialog().setTitle(title);
