@@ -105,10 +105,10 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 String action = intent.getAction();
                 switch (action)
                 {
@@ -120,13 +120,16 @@ public class LoginActivity extends AppCompatActivity
                         startActivity(i2);
                         finish();
                         break;
-
-
+                    case RoosterConnectionService.DESTROX:
+                        showProgress(false);
+                        break;
                 }
 
             }
         };
-        IntentFilter filter = new IntentFilter(RoosterConnectionService.UI_AUTHENTICATED);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(RoosterConnectionService.UI_AUTHENTICATED);
+        filter.addAction(RoosterConnectionService.DESTROX);
         this.registerReceiver(mBroadcastReceiver, filter);
     }
 
@@ -257,7 +260,6 @@ public class LoginActivity extends AppCompatActivity
                 .putString("xmpp_jid", mJidView.getText().toString())
                 .putString("xmpp_password", mPasswordView.getText().toString())
                 .putString("xmpp_server", mServerHost.getText().toString())
-                .putBoolean("xmpp_logged_in",true)
                 .apply();
 
         //Start the service
@@ -311,4 +313,3 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 }
-

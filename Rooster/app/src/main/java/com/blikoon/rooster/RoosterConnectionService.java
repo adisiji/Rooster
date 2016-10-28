@@ -1,8 +1,11 @@
 package com.blikoon.rooster;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -11,6 +14,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.blikoon.rooster.utils.prefUtil;
 
@@ -29,10 +33,10 @@ public class RoosterConnectionService extends Service {
     public static final String SEND_MESSAGE = "com.blikoon.rooster.sendmessage";
     public static final String BUNDLE_MESSAGE_BODY = "b_body";
     public static final String BUNDLE_TO = "b_to";
-
+    public static final String DESTROX = "com.blikoon.rooster.hancurr";
     public static final String NEW_MESSAGE = "com.blikoon.rooster.newmessage";
     public static final String BUNDLE_FROM_JID = "b_from";
-
+    private NotificationManager notificationManager;
     public static RoosterConnection.ConnectionState sConnectionState;
     public static RoosterConnection.LoggedInState sLoggedInState;
     private boolean mActive;//Stores whether or not the thread is active
@@ -72,21 +76,6 @@ public class RoosterConnectionService extends Service {
     public void onCreate() {
         super.onCreate();
         preparePref();
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext());
-        Intent notificationIntent = new Intent(this, HomeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-        notification.setPriority(888);
-        notification.setTicker(getString(R.string.ticker_text));
-        notification.setContentTitle("XMPP-SMS Service");
-        notification.setContentText("Don't kill me");
-        notification.setSmallIcon(R.mipmap.ic_launcher);
-        notification.setOngoing(true);
-        notification.setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0,notification.build());
-
         Log.d(TAG,"onCreate()");
     }
 
@@ -102,7 +91,9 @@ public class RoosterConnectionService extends Service {
 
         }catch (IOException |SmackException |XMPPException e)
         {
-            Log.d(TAG,"Something went wrong while connecting ,make sure the credentials are right and try again");
+            Toast.makeText(getApplicationContext(),"Something went wrong, make sure the credentials are right and try again",
+                    Toast.LENGTH_SHORT).show();
+            Log.e(TAG,"Something went wrong while connecting ,make sure the credentials are right and try again");
             e.printStackTrace();
             //Stop the service all together.
             stopSelf();
@@ -162,6 +153,9 @@ public class RoosterConnectionService extends Service {
     public void stop()
     {
         Log.d(TAG,"stop()");
+        Intent intent = new Intent(DESTROX);
+        intent.setPackage(getApplicationContext().getPackageName());
+        getApplicationContext().sendBroadcast(intent);
         mActive = false;
         mTHandler.post(new Runnable() {
             @Override
@@ -172,7 +166,6 @@ public class RoosterConnectionService extends Service {
                 }
             }
         });
-
     }
 
 
@@ -181,14 +174,30 @@ public class RoosterConnectionService extends Service {
         Log.d(TAG,"onStartCommand()");
         sLoggedInState = RoosterConnection.LoggedInState.LOGGED_IN;
         start();
+        Intent notificationIntent = new Intent(this, HomeActivity.class);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext());
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        notification.setPriority(888);
+        notification.setTicker(getString(R.string.ticker_text));
+        notification.setContentTitle("XMPP-SMS Service");
+        notification.setContentText("Don't kill me");
+        notification.setSmallIcon(R.mipmap.ic_launcher);
+        notification.setOngoing(true);
+        notification.setContentIntent(pendingIntent);
+
+        notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0,notification.build());
         return Service.START_STICKY;
         //RETURNING START_STICKY CAUSES OUR CODE TO STICK AROUND WHEN THE APP ACTIVITY HAS DIED.
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG,"onDestroy()");
         super.onDestroy();
+        Log.d(TAG,"onDestroy()");
+        notificationManager.cancel(0);
+        stopSelf();
         stop();
     }
 }

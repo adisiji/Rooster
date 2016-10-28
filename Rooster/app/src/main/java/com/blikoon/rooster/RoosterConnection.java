@@ -32,6 +32,12 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.SSLContext;
+import javax.security.cert.CertificateException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -100,7 +106,10 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                 XMPPTCPConnectionConfiguration.builder();
         buildoz.setHost(server)
                 .setPort(port)
-                .setServiceName(domain);
+                .setServiceName(domain)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
+                ;
+
         return buildoz;
     }
 
@@ -118,10 +127,10 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         Log.d(TAG, "Connecting to server " + mServiceName);
         XMPPTCPConnectionConfiguration.Builder builderx;
         if(!TextUtils.isEmpty(mServerHost)){ //servernya di custom
-            builderx = builder(522,mServiceName,mServerHost);
+            builderx = builder(5222,mServiceName,mServerHost);
         }
         else {
-            builderx = builder(522,mServiceName);
+            builderx = builder(5222,mServiceName);
         }
         builderx.setUsernameAndPassword(mUsername, mPassword);
         //builderx.setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
@@ -272,7 +281,6 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
 
     public void disconnect()
     {
-        Log.d(TAG,"Disconnecting from server "+ mServiceName);
         try
         {
             if (mConnection.isAuthenticated())
@@ -292,7 +300,6 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
             mApplicationContext.unregisterReceiver(uiThreadMessageReceiver);
             uiThreadMessageReceiver = null;
         }
-
     }
 
 
@@ -308,7 +315,6 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         ChatManager.getInstanceFor(mConnection).createChat(tesID,this);
         Log.d(TAG,"Authenticated Successfully");
         showContactListActivityWhenAuthenticated();
-
     }
 
     @Override
@@ -348,9 +354,10 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
 
     private void showContactListActivityWhenAuthenticated()
     {
-        Intent i = new Intent(RoosterConnectionService.UI_AUTHENTICATED);
+        Intent i = new Intent();
+        i.setAction(RoosterConnectionService.UI_AUTHENTICATED);
         i.setPackage(mApplicationContext.getPackageName());
         mApplicationContext.sendBroadcast(i);
-        Log.d(TAG,"Sent the broadcast that we are authenticated");
+        Log.d(TAG,"Sent the broadcast that we are good");
     }
 }

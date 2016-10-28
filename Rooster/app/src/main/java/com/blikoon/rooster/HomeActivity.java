@@ -40,7 +40,6 @@ import static com.blikoon.rooster.utils.ColorUtil.getNavTextColorState;
 public class HomeActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
-    private SharedPreferences prefs ;
     private NavigationView navigationView = null;
     private NavigationMenuView navigationMenuView = null;
     private DrawerLayout drawer = null;
@@ -51,13 +50,6 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if(!prefs.getBoolean("xmpp_logged_in",true)){
-            Intent i = new Intent(this,LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-            finish();
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -138,9 +130,6 @@ public class HomeActivity extends AppCompatActivity implements
                 String ns = Context.NOTIFICATION_SERVICE;
                 NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
                 nMgr.cancel(0);
-                prefs.edit()
-                        .putBoolean("xmpp_logged_in",false)
-                        .apply();
                 stopService(new Intent(this,RoosterConnectionService.class));
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
