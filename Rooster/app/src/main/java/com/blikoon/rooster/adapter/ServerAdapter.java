@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.blikoon.rooster.Contact;
+import com.blikoon.rooster.model.Contact;
 import com.blikoon.rooster.R;
 
 import java.util.List;

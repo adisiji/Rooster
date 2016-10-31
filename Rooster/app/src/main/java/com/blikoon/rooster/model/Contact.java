@@ -1,4 +1,4 @@
-package com.blikoon.rooster;
+package com.blikoon.rooster.model;
 
 /**
  * Created by gakwaya on 4/16/2016.

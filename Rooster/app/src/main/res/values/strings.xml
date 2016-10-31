@@ -2,9 +2,11 @@
     <string name="app_name">SMS2XMPP</string>
 
     <!-- Strings related to login -->
+    <string name="cust_host">Custom Host</string>
     <string name="prompt_jid">Jabber Id</string>
     <string name="prompt_password">Password </string>
     <string name="prompt_server">Server</string>
+    <string name="prompt_port">Port Number</string>
     <string name="action_sign_in">Sign in </string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_jid">This Jid  is invalid</string>
@@ -23,9 +25,10 @@
     <string name="dev_phone">+6289601673292</string>
 
     <!--menu strings-->
-    <string name="nav_edit_server">Edit Server</string>
     <string name="nav_home">Home</string>
+    <string name="nav_edit_server">Edit Server</string>
     <string name="nav_edit_text">Edit Code</string>
+    <string name="nav_edit_phone">Edit Number</string>
     <string name="nav_logout">Log Out</string>
 
     <string name="navigation_drawer_open">Open</string>
@@ -35,6 +38,7 @@
     <string name="default_filter2">원</string>
     <string name="default_code">KR</string>
     <string name="default_server">asneiya31@xmpp.jp</string>
+    <string name="default_number">089999010123</string>
 
     <string name="add_server">Server Name</string>
     </resources>

@@ -12,10 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blikoon.rooster.AddReceiverDialog_Fragment;
-import com.blikoon.rooster.Contact;
-import com.blikoon.rooster.ContactModel;
 import com.blikoon.rooster.R;
-import com.blikoon.rooster.utils.AllUtil;
 import com.blikoon.rooster.utils.prefUtil;
 
 /**
@@ -91,7 +88,7 @@ public class TextFilterFragment extends Fragment implements AddReceiverDialog_Fr
     }
 
     @Override
-    public void onFinishUserDialog(String filter, int which) {
+    public void onFinishUserDialog(String filter, int which, int id) {
             switch (which) {
                 case 3: //when add code
 
@@ -107,14 +104,14 @@ public class TextFilterFragment extends Fragment implements AddReceiverDialog_Fr
 
     private void showAddDialog() {
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Code",3);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Code",3,0);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_add_filter");
     }
 
     private void showEditDialog(){
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Code",4);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Code",4,0);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_edit_filter");
     }

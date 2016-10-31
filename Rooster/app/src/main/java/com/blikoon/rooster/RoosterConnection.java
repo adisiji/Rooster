@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.blikoon.rooster.utils.prefUtil;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
@@ -28,18 +29,22 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.sasl.provided.SASLPlainMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.TLSUtils;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
-import javax.security.cert.CertificateException;
+import javax.net.ssl.X509TrustManager;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
+import de.duenndns.ssl.MemorizingTrustManager;
+
+import static com.blikoon.rooster.RoosterConnectionService.sLoggedInState;
 
 /**
  * Created by gakwaya on 4/28/2016.
@@ -50,7 +55,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
     private static final String TAG = "RoosterConnection";
     private static final String tesID = "asneiya31@xmpp.jp";
     private  final Context mApplicationContext;
-    private  final String mUsername, mServerHost;
+    private  final String mUsername, mServerHost, mPort;
     private  final String mPassword;
     private  final String mServiceName;
     private  final String jid;
@@ -89,6 +94,8 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                 .getString("xmpp_jid",null);
         mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_password",null);
+        mPort = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                .getString("xmpp_port",null);
 
         if( jid != null)
         {
@@ -107,9 +114,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         buildoz.setHost(server)
                 .setPort(port)
                 .setServiceName(domain)
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
-                ;
-
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
         return buildoz;
     }
 
@@ -126,22 +131,32 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
     {
         Log.d(TAG, "Connecting to server " + mServiceName);
         XMPPTCPConnectionConfiguration.Builder builderx;
-        if(!TextUtils.isEmpty(mServerHost)){ //servernya di custom
-            builderx = builder(5222,mServiceName,mServerHost);
+        if(!TextUtils.isEmpty(mServerHost) && !TextUtils.isEmpty(mPort)){ //servernya di custom
+            builderx = builder(Integer.parseInt(mPort),mServiceName,mServerHost);
         }
         else {
             builderx = builder(5222,mServiceName);
         }
         builderx.setUsernameAndPassword(mUsername, mPassword);
-        //builderx.setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
         //builder.setRosterLoadedAtLogin(true);
         builderx.setResource("Rooster");
-
+        try {
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                MemorizingTrustManager mtm = new MemorizingTrustManager(mApplicationContext);
+                sslContext.init(null, new X509TrustManager[]{mtm}, new java.security.SecureRandom());
+                builderx.setCustomSSLContext(sslContext);
+                builderx.setHostnameVerifier(
+                        mtm.wrapHostnameVerifier(new org.apache.http.conn.ssl.StrictHostnameVerifier()));
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
         //Set up the ui thread broadcast message receiver.
         setupUiThreadBroadCastMessageReceiver();
 
         mConnection = new XMPPTCPConnection(builderx.build());
         mConnection.addConnectionListener(this);
+        mConnection.setPacketReplyTimeout(15000);
+        setSASL();
         mConnection.connect();
         mConnection.login();
 
@@ -155,6 +170,13 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         }
         else {
             Log.e(tesID,"ga ada cuii");
+        }
+    }
+
+    private void setSASL(){
+        final Map<String, String> registeredSASLMechanisms = SASLAuthentication.getRegisterdSASLMechanisms();
+        for (String mechanism : registeredSASLMechanisms.values()) {
+            SASLAuthentication.unBlacklistSASLMechanism(mechanism);
         }
     }
 
@@ -357,6 +379,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
         Intent i = new Intent();
         i.setAction(RoosterConnectionService.UI_AUTHENTICATED);
         i.setPackage(mApplicationContext.getPackageName());
+        sLoggedInState = RoosterConnection.LoggedInState.LOGGED_IN;
         mApplicationContext.sendBroadcast(i);
         Log.d(TAG,"Sent the broadcast that we are good");
     }

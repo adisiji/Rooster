@@ -26,7 +26,7 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
     private EditText mEditText;
 
     public interface UserNameListener {
-        void onFinishUserDialog(String content, int sikon);
+        void onFinishUserDialog(String content, int sikon, int id);
     }
 
     public AddReceiverDialog_Fragment() {
@@ -35,11 +35,12 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         // Use `newInstance` instead as shown below
     }
 
-    public static AddReceiverDialog_Fragment newInstance(String title, int which){
+    public static AddReceiverDialog_Fragment newInstance(String title, int which, int id){
         AddReceiverDialog_Fragment dialog_fragment = new AddReceiverDialog_Fragment();
         Bundle args = new Bundle();
         args.putString("title",title);
         args.putInt("sikon",which);
+        args.putInt("id",id);
         dialog_fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
         dialog_fragment.setArguments(args);
         return dialog_fragment;
@@ -67,6 +68,7 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
         final int sikon = getArguments().getInt("sikon",0);
+        final int id = getArguments().getInt("id",0);
         mEditText = (EditText) view.findViewById(R.id.txt_your_name);
         Button btnOk = (Button)view.findViewById(R.id.button) ;
         Button btnCancel = (Button)view.findViewById(R.id.button2);
@@ -76,7 +78,7 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onFinishUserDialog(mEditText.getText().toString(),sikon);
+                listener.onFinishUserDialog(mEditText.getText().toString(),sikon,id);
                 dismiss();
             }
         });
@@ -105,7 +107,8 @@ public class AddReceiverDialog_Fragment extends DialogFragment implements TextVi
         if (EditorInfo.IME_ACTION_DONE == actionId) {
             // Return input text back to activity through the implemented listener
             final int sikon = getArguments().getInt("sikon",0);
-            listener.onFinishUserDialog(mEditText.getText().toString(), sikon);
+            final int id = getArguments().getInt("id",0);
+            listener.onFinishUserDialog(mEditText.getText().toString(), sikon,id);
             // Close the dialog and return back to the parent activity
             dismiss();
             return true;

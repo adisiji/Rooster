@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,11 +20,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.blikoon.rooster.fragments.ContactListFragment;
-import com.blikoon.rooster.fragments.EditServerFragment;
-import com.blikoon.rooster.fragments.TextFilterFragment;
-
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import com.blikoon.rooster.fragments.*;
 
 import static com.blikoon.rooster.utils.AllUtil.browseUrl;
 import static com.blikoon.rooster.utils.AllUtil.mailTo;
@@ -86,14 +81,17 @@ public class HomeActivity extends AppCompatActivity implements
         if (navigationView.getMenu().findItem(itemId).isChecked()) {
             return true;
         }
-
         if (itemId == R.id.nav_home) {
             showHomeScreen();
         } else if (itemId == R.id.nav_server) {
             showServerScreen();
         } else if (itemId == R.id.nav_text) {
             showTextScreen();
-        } else if (itemId == R.id.nav_logout) {
+        }
+        else if(itemId == R.id.nav_phone){
+            showEditNumber();
+        }
+        else if (itemId == R.id.nav_logout) {
             LogOutScreen();
         }
 
@@ -120,6 +118,13 @@ public class HomeActivity extends AppCompatActivity implements
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, TextFilterFragment.newInstance(" "))
+                .commit();
+    }
+
+    private void showEditNumber(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, NumberFilterFragment.newInstance(" "))
                 .commit();
     }
 

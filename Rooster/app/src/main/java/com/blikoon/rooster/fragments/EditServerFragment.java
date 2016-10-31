@@ -5,7 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blikoon.rooster.AddReceiverDialog_Fragment;
-import com.blikoon.rooster.Contact;
+import com.blikoon.rooster.model.Contact;
 import com.blikoon.rooster.ContactModel;
 import com.blikoon.rooster.R;
 import com.blikoon.rooster.adapter.ServerAdapter;
@@ -101,7 +100,7 @@ public class EditServerFragment extends Fragment implements AddReceiverDialog_Fr
     }
 
     @Override
-    public void onFinishUserDialog(String user, int which) {
+    public void onFinishUserDialog(String user, int which, int id) {
         if(AllUtil.isValidId(user)){
             /*Contact contact = new Contact(user);
             contacts.add(contact);
@@ -128,14 +127,14 @@ public class EditServerFragment extends Fragment implements AddReceiverDialog_Fr
 
     private void showEditDialog(){
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Server",2);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Server",2,0);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_edit_name");
     }
 
     private void showAddDialog() {
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Server",1);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Add Server",1,0);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_add_server");
     }

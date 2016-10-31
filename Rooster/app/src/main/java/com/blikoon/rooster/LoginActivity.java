@@ -26,6 +26,8 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,11 +49,12 @@ public class LoginActivity extends AppCompatActivity
 
     // UI references.
     private AutoCompleteTextView mJidView;
-    private EditText mPasswordView, mServerHost;
+    private EditText mPasswordView, mServerHost, mPortHost;
     private View mProgressView;
     private View mLoginFormView;
     private BroadcastReceiver mBroadcastReceiver;
     private Context mContext;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +71,13 @@ public class LoginActivity extends AppCompatActivity
 
     private void prepare(){
         mJidView = (AutoCompleteTextView) findViewById(R.id.email);
+        mPortHost = (EditText)findViewById(R.id.portLogin);
         mJidView.setText("neobyte@xmpp.jp");
         populateAutoComplete();
+        checkBox = (CheckBox)findViewById(R.id.checkBoxLogin);
         mServerHost = (EditText)findViewById(R.id.serverLogin);
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.setText("adikeren");
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -82,7 +88,19 @@ public class LoginActivity extends AppCompatActivity
                 return false;
             }
         });
-
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(!b){
+                    mServerHost.setVisibility(View.GONE);
+                    mPortHost.setVisibility(View.GONE);
+                }
+                else {
+                    mServerHost.setVisibility(View.VISIBLE);
+                    mPortHost.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         Button mJidSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mJidSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -90,7 +108,6 @@ public class LoginActivity extends AppCompatActivity
                 attemptLogin();
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mContext = this;
@@ -257,9 +274,10 @@ public class LoginActivity extends AppCompatActivity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //String
         prefs.edit()
-                .putString("xmpp_jid", mJidView.getText().toString())
-                .putString("xmpp_password", mPasswordView.getText().toString())
-                .putString("xmpp_server", mServerHost.getText().toString())
+                .putString("xmpp_jid", mJidView.getText().toString().trim())
+                .putString("xmpp_password", mPasswordView.getText().toString().trim())
+                .putString("xmpp_server", mServerHost.getText().toString().trim())
+                .putString("xmpp_port", mPortHost.getText().toString().trim())
                 .apply();
 
         //Start the service

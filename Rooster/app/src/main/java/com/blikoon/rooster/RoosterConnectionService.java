@@ -172,7 +172,6 @@ public class RoosterConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG,"onStartCommand()");
-        sLoggedInState = RoosterConnection.LoggedInState.LOGGED_IN;
         start();
         Intent notificationIntent = new Intent(this, HomeActivity.class);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext());

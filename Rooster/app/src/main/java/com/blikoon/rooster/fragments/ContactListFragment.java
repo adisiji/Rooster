@@ -7,18 +7,15 @@ import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.blikoon.rooster.ChatActivity;
-import com.blikoon.rooster.Contact;
+import com.blikoon.rooster.model.Contact;
 import com.blikoon.rooster.adapter.ContactAdapter;
 import com.blikoon.rooster.ContactModel;
 import com.blikoon.rooster.R;
-import com.blikoon.rooster.RoosterConnection;
 
 import java.util.List;
 

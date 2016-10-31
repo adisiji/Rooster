@@ -2,6 +2,7 @@ package com.blikoon.rooster;
 
 import android.content.Context;
 
+import com.blikoon.rooster.model.Contact;
 import com.blikoon.rooster.utils.prefUtil;
 
 import java.util.ArrayList;

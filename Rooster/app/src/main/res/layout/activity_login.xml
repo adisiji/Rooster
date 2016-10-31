@@ -64,7 +64,25 @@
                     android:textColor="@color/black"/>
 
             </android.support.design.widget.TextInputLayout>
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cust_host"
+                    android:textSize="16sp"
+                    android:layout_weight="1"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBoxLogin"
+                android:layout_weight="1" />
+            </LinearLayout>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -75,8 +93,24 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_server"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/portLogin"
+                    android:inputType="number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_port"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
 
             </android.support.design.widget.TextInputLayout>
 
