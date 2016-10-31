@@ -1,0 +1,49 @@
+<android.support.v7.widget.CardView
+    android:id="@+id/cv_item_num_list"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="2dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_alignParentTop="true"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:layout_margin="12dp"
+    android:weightSum="10">
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:focusable="false"
+        android:ems="10"
+        android:padding="8dp"
+        android:id="@+id/edit_number_txt"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="7"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_margin="4dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_edit_pencil"
+        android:id="@+id/btn_edit_number"
+        android:layout_weight="1.5"
+        android:clickable="true"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_margin="4dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_del_trash"
+        android:id="@+id/btn_del_number"
+        android:layout_weight="1.5"
+        android:clickable="true"/>
+</LinearLayout>
+</android.support.v7.widget.CardView>
