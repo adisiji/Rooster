@@ -199,6 +199,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                         final String batas = prefUtil.getInstance().getString("filter_text2",null);
                         final String kode = prefUtil.getInstance().getString("filter_code",null);
                         final String server = prefUtil.getInstance().getString("server_name",null);
+                        final String phone = prefUtil.getInstance().getString("filter_number",null);
                         Bundle myBundle = intent.getExtras();
                         SmsMessage [] messages = null;
                         String strMessage = "";
@@ -218,26 +219,28 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                 else {
                                     messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                                 }
-                                strMessage += "SMS From: " + messages[i].getOriginatingAddress();
+                                String from = messages[i].getOriginatingAddress();
+                                strMessage += "SMS From: " + from;
                                 strMessage += " : ";
-                                String isiSMS =  messages[i].getMessageBody();
                                 strMessage += messages[i].getMessageBody();
-                                int ind = isiSMS.indexOf(filter_sms);
-                                int bts = isiSMS.indexOf(batas);
-                                if(ind>-1 && bts >-1){
-                                    String deposit = isiSMS.substring(ind+3,bts);
-                                    deposit = deposit.replaceAll("[^\\d]", "");
-                                    deposit += "."+kode;
-                                    deposit += isiSMS.substring(bts-3,bts);
-                                    //show notification
-                                    mNotifyBuilder.setContentText(messages[i].getMessageBody())
-                                            .setNumber(numMsg++);
-                                    mNotification.notify(notifyID,mNotifyBuilder.build());
-                                    sendMessage("Forward Ouput : "+deposit,server);
+                                if(from.equals(phone)){
+                                    String isiSMS =  messages[i].getMessageBody();
+                                    int ind = isiSMS.indexOf(filter_sms);
+                                    int bts = isiSMS.indexOf(batas);
+                                    if(ind>-1 && bts >-1){
+                                        String deposit = isiSMS.substring(ind+3,bts);
+                                        deposit = deposit.replaceAll("[^\\d]", "");
+                                        deposit += "."+kode;
+                                        deposit += isiSMS.substring(bts-3,bts);
+                                        //show notification
+                                        mNotifyBuilder.setContentText(messages[i].getMessageBody())
+                                                .setNumber(numMsg++);
+                                        mNotification.notify(notifyID,mNotifyBuilder.build());
+                                        sendMessage(deposit,server);
+                                    }
+                                    Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
                                 }
                             }
-                            Log.e(" SMS >>", strMessage);
-                            Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
             }

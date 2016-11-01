@@ -8,17 +8,10 @@
             android:icon="@drawable/ic_nav_home"
             android:title="@string/nav_home" />
         <item
-            android:id="@+id/nav_server"
-            android:icon="@drawable/ic_nav_server"
-            android:title="@string/nav_edit_server" />
-        <item
-            android:id="@+id/nav_text"
-            android:icon="@drawable/ic_nav_text"
-            android:title="@string/nav_edit_text" />
-        <item
-            android:id="@+id/nav_phone"
-            android:icon="@drawable/ic_nav_text"
-            android:title="@string/nav_edit_phone" />
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_gears50"
+            android:title="@string/nav_setting" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_nav_logout"

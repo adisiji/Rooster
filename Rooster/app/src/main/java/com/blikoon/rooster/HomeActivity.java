@@ -83,13 +83,9 @@ public class HomeActivity extends AppCompatActivity implements
         }
         if (itemId == R.id.nav_home) {
             showHomeScreen();
-        } else if (itemId == R.id.nav_server) {
-            showServerScreen();
-        } else if (itemId == R.id.nav_text) {
-            showTextScreen();
         }
-        else if(itemId == R.id.nav_phone){
-            showEditNumber();
+        else if(itemId == R.id.nav_setting){
+            showSettingScreen();
         }
         else if (itemId == R.id.nav_logout) {
             LogOutScreen();
@@ -107,24 +103,10 @@ public class HomeActivity extends AppCompatActivity implements
                 .commit();
     }
 
-    private void showServerScreen() {
+    private void showSettingScreen(){
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, EditServerFragment.newInstance(" "))
-                .commit();
-    }
-
-    private void showTextScreen() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, TextFilterFragment.newInstance(" "))
-                .commit();
-    }
-
-    private void showEditNumber(){
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, NumberFilterFragment.newInstance(" "))
+                .replace(R.id.fragment_container, SettingFragment.newInstance(" "))
                 .commit();
     }
 

@@ -3,7 +3,6 @@ package com.blikoon.rooster.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +22,6 @@ public class ContactListFragment extends Fragment implements
         ContactAdapter.mClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String TAG = "ContactListActivity";
-    private FragmentManager fm;
     private RecyclerView contactsRecyclerView;
     private ContactAdapter mAdapter;
     private List<Contact> contacts;

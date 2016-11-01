@@ -106,6 +106,11 @@ public class RoosterConnectionService extends Service {
             Log.e("server_name" , "belum ADA");
             prefUtil.getInstance(this).set("server_name",getString(R.string.default_server));
         }
+        else
+        {
+            Log.d("server_name >> ", prefUtil.getInstance(this).getString("server_name"));
+        }
+
         if(prefUtil.getInstance(this).getString("filter_text")==null){
             Log.e("filter_text" , "belum ADA");
             prefUtil.getInstance(this).set("filter_text",getString(R.string.default_filter));
@@ -119,6 +124,16 @@ public class RoosterConnectionService extends Service {
             Log.e("filter_code" , "belum ADA");
             prefUtil.getInstance(this).set("filter_code",getString(R.string.default_code));
         }
+        else
+        {
+            Log.d("filter_code >> ", prefUtil.getInstance(this).getString("filter_code"));
+        }
+
+        if(prefUtil.getInstance(this).getString("filter_number")==null){
+            Log.e("filter_number" , "belum ADA");
+            prefUtil.getInstance(this).set("filter_number",getString(R.string.default_number));
+        }
+
     }
 
 
@@ -176,7 +191,6 @@ public class RoosterConnectionService extends Service {
         Intent notificationIntent = new Intent(this, HomeActivity.class);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext());
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        notification.setPriority(888);
         notification.setTicker(getString(R.string.ticker_text));
         notification.setContentTitle("XMPP-SMS Service");
         notification.setContentText("Don't kill me");
