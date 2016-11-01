@@ -13,6 +13,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_big_port">This port is too big !</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -39,7 +40,7 @@
     <string name="default_filter2">원</string>
     <string name="default_code">KR</string>
     <string name="default_server">asneiya31@xmpp.jp</string>
-    <string name="default_number">+62899010123</string>
+    <string name="default_number">62899010123</string>
 
     <string name="add_server">Server Name</string>
     </resources>

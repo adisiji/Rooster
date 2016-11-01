@@ -223,6 +223,10 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                 strMessage += "SMS From: " + from;
                                 strMessage += " : ";
                                 strMessage += messages[i].getMessageBody();
+                                /**
+                                 * saring nomor sms
+                                 * lalu sendMessage
+                                 */
                                 if(from.equals(phone)){
                                     String isiSMS =  messages[i].getMessageBody();
                                     int ind = isiSMS.indexOf(filter_sms);
@@ -240,6 +244,7 @@ public class RoosterConnection implements ConnectionListener,ChatMessageListener
                                     }
                                     Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
                                 }
+                                Log.d("isi sms", strMessage);
                             }
                         }
                     }

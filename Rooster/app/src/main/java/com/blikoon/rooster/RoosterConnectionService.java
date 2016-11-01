@@ -190,17 +190,17 @@ public class RoosterConnectionService extends Service {
         start();
         Intent notificationIntent = new Intent(this, HomeActivity.class);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext());
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 1, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         notification.setTicker(getString(R.string.ticker_text));
         notification.setContentTitle("XMPP-SMS Service");
-        notification.setContentText("Don't kill me");
-        notification.setSmallIcon(R.mipmap.ic_launcher);
+        notification.setContentText("Running");
+        notification.setSmallIcon(R.drawable.ic_stat_maps_layers);
         notification.setOngoing(true);
         notification.setContentIntent(pendingIntent);
 
         notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0,notification.build());
+        notificationManager.notify(1,notification.build());
         return Service.START_STICKY;
         //RETURNING START_STICKY CAUSES OUR CODE TO STICK AROUND WHEN THE APP ACTIVITY HAS DIED.
     }

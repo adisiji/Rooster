@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -40,12 +40,18 @@ public class HomeActivity extends AppCompatActivity implements
     private DrawerLayout drawer = null;
     private View headerView;
     private boolean isDoubleBackToExit = false;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!prefs.getBoolean("logged_in",false)){
+            Intent i2 = new Intent(this, LoginActivity.class);
+            startActivityForResult(i2,33);
+            finish();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -115,8 +121,9 @@ public class HomeActivity extends AppCompatActivity implements
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (RoosterConnectionService.class.getName().equals(service.service.getClassName())) {
                 String ns = Context.NOTIFICATION_SERVICE;
+                prefs.edit(). putBoolean("logged_in", false).apply();
                 NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
-                nMgr.cancel(0);
+                nMgr.cancel(1);
                 stopService(new Intent(this,RoosterConnectionService.class));
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
@@ -135,7 +142,7 @@ public class HomeActivity extends AppCompatActivity implements
         } else {
             if (isDoubleBackToExit) {
                 super.onBackPressed();
-                finish();
+                LogOutScreen();
             }
             if (!isDoubleBackToExit) {
                 Toast.makeText(this, getString(R.string.re_tap_text), Toast.LENGTH_SHORT).show();

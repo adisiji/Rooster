@@ -12,7 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -45,11 +45,11 @@ public class LoginActivity extends AppCompatActivity
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 99;
-
+    private View focusView;
 
     // UI references.
     private AutoCompleteTextView mJidView;
-    private EditText mPasswordView, mServerHost, mPortHost;
+    private TextInputEditText mPasswordView, mServerHost, mPortHost;
     private View mProgressView;
     private View mLoginFormView;
     private BroadcastReceiver mBroadcastReceiver;
@@ -71,12 +71,12 @@ public class LoginActivity extends AppCompatActivity
 
     private void prepare(){
         mJidView = (AutoCompleteTextView) findViewById(R.id.email);
-        mPortHost = (EditText)findViewById(R.id.portLogin);
+        mPortHost = (TextInputEditText)findViewById(R.id.portLogin);
         mJidView.setText("neobyte@xmpp.jp");
         populateAutoComplete();
         checkBox = (CheckBox)findViewById(R.id.checkBoxLogin);
-        mServerHost = (EditText)findViewById(R.id.serverLogin);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mServerHost = (TextInputEditText)findViewById(R.id.serverLogin);
+        mPasswordView = (TextInputEditText) findViewById(R.id.password);
         mPasswordView.setText("adikeren");
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -123,6 +123,7 @@ public class LoginActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"onResume");
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -133,6 +134,9 @@ public class LoginActivity extends AppCompatActivity
                         Log.d(TAG,"Got a broadcast to show the main app window");
                         //Show the main app window
                         showProgress(false);
+                        prefs.edit().
+                                putBoolean("logged_in", true)
+                                .apply();
                         Intent i2 = new Intent(mContext,HomeActivity.class);
                         startActivity(i2);
                         finish();
@@ -203,6 +207,14 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==33){
+            focusView = null;
+            prepare();
+        }
+    }
+
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -217,11 +229,12 @@ public class LoginActivity extends AppCompatActivity
         mServerHost.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mJidView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = mJidView.getText().toString().trim();
+        String password = mPasswordView.getText().toString().trim();
+        String port = mPortHost.getText().toString().trim();
 
         boolean cancel = false;
-        View focusView = null;
+        focusView = null;
 
         if (TextUtils.isEmpty(email)) {
             mJidView.setError(getString(R.string.error_field_required));
@@ -247,8 +260,11 @@ public class LoginActivity extends AppCompatActivity
             focusView = mJidView;
             cancel = true;
         }
-
-
+        else if(!TextUtils.isEmpty(port) && Integer.parseInt(port)>65535){
+            mPortHost.setError(getString(R.string.error_big_port));
+            focusView = mPortHost;
+            cancel = true;
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first

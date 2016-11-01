@@ -137,7 +137,7 @@ public class SettingFragment extends Fragment implements AddReceiverDialog_Fragm
 
     private void showKodeDialog(){
         FragmentManager fm = getFragmentManager();
-        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Kode",2);
+        AddReceiverDialog_Fragment dialog_fragment = AddReceiverDialog_Fragment.newInstance("Edit Code",2);
         dialog_fragment.setTargetFragment(this,1);
         dialog_fragment.show(fm, "fragment_edit_name");
     }
